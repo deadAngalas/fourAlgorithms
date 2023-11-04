@@ -7,8 +7,9 @@ using namespace std;
 
 struct Node
 {
-  int data; // 4 bytes
-  Node *link; // 4 bytes for adress as it is integer
+  int data;
+  Node *back;
+  Node *front;
 };
 
 void ProgEnd()
@@ -18,7 +19,7 @@ void ProgEnd()
   cout <<"              ,---------------------------," << endl;
   cout <<"              |  ---------------------  |"<< endl;
   cout <<"              | |                       | |"<< endl;
-  cout <<"              | |     Linked            | |"<< endl;
+  cout <<"              | |   Bidirectional       | |"<< endl;
   cout <<"              | |         List          | |"<< endl;
   cout <<"              | |            Program    | |"<< endl;
   cout <<"              | |                       | |"<< endl;
@@ -39,50 +40,73 @@ void ProgEnd()
 Node *CreateNode()
 {
   Node *newNode;
-  newNode = new Node;	// 8 bytes for new node
+  newNode = new Node;
   cout << "\nEnter number to node: ";
   cin >> newNode->data;
-  newNode->link = NULL;
+  newNode->back = NULL;
+  newNode->front = NULL;
   return newNode;
 }
 
 void PrintList (Node *head)
 {
-  Node *cur; // adress
-  cout<<"\nList elements:\n";
-  cur = head;
-  while (cur != NULL)
+  if(head)
+  {
+    Node *cur; // adress
+    cout<<"  Bidirectional list elements:\n\n";
+    cur = head;
+
+    cout << "\tLooping forward through list items:\n\t";
+    while (cur->front != NULL)
     {
       cout << cur->data << " ";
-      cur = cur->link; //pareja uz nakamo mezgli
+      cur = cur->front;
     }
+    cout << cur->data << " " << endl;
+
+    cout << "\n\tLooping backwards through list items:\n\t";
+    while (cur->back != NULL)
+    {
+      cout << cur->data << " ";
+      cur = cur->back;
+    }
+    cout << cur->data << " " << endl;
+  }
+  else cout << "Bidirectional list is empty!\n\n";
 }
 
-Node *AddFirst(Node *head) // return adress
+Node *AddFirst(Node *head)
 {
   Node *cur;
-  cur = new Node; // izdalam ram uz 8 bait
+  cur = new Node;
   cur = CreateNode();
-  cur->link = head;
-  head = cur;
+
+  if(head)
+  {
+    cur->front = head;
+    head->back = cur;
+    head = cur;
+  }
+  else
+  {
+    head = cur;
+  }
   return head;
 }
 
 Node *AddEnd(Node *head)
 {
   Node *cur, *cur1;
-  // new node -----------
   cur1 = new Node;
   cur1 = CreateNode();
-  // --------------------
 
-  // list travelling
   cur = head;
-  while (cur->link != NULL)
+  while (cur->front != NULL)
   {
-      cur = cur->link;
+      cur = cur->front;
   }
-  cur->link = cur1;
+  cur->front = cur1;
+  cur1->back = cur;
 
   return head;
 }
@@ -94,74 +118,42 @@ Node *FindNode(Node *head, int x)
 
   while(cur != NULL && cur->data != x)
   {
-      cur = cur->link;
+      cur = cur->front;
   }
-
   return cur;
-}
-
-Node *PreviousNode(Node *head, int x)
-{
-  Node *cur, *prev;
-  cur = head;
-
-  while(cur != NULL && cur->data != x)
-  {
-      prev = cur;
-      cur = cur->link;
-  }
-
-  return prev;
 }
 
 Node *AddBefore(Node *head)
 {
-  // ask user
   int x;
   Node *cur, *newNode, *prev;
   cout << "Before which node add: ";
   cin >> x;
-
-  // exist or not exist
 
   cur = FindNode(head, x);
   if(cur)
   {
     cout << "Node exist!\n";
     newNode = CreateNode();
-    prev = PreviousNode(head, x);
+    prev = cur->back;
     if(head->data == x)
     {
-      newNode->link = head;
+      newNode->front = head;
+      head->back = newNode;
       head = newNode;
     }
     else
     {
-      prev->link = newNode;
-      newNode->link = cur;
-      //newNode->link = cur;
-      //prev->link = newNode;
+      cur->back = newNode;
+      newNode->front = cur;
+      newNode->back = prev;
+      prev->front = newNode;
     }
     cout << "New node is added!\n";
   }
   else cout << "Node does not exist!\n";
 
  return head;
-}
-
-Node *NextNode(Node *head, int x)
-{
-  Node *cur, *next;
-  cur = head;
-
-  while(cur != NULL && cur->data != x)
-  {
-      cur = cur->link;
-  }
-  //cur = cur->link;
-  next = cur->link;
-
-  return next;
 }
 
 Node *AddAfter(Node *head)
@@ -177,16 +169,19 @@ Node *AddAfter(Node *head)
   {
     cout << "Node exist!\n";
     newNode = CreateNode();
-    next = NextNode(head, x);
+    next = cur->front;
 
     if(!next)
     {
-      cur->link = newNode;
+      cur->front = newNode;
+      newNode->back = cur;
     }
     else
     {
-      cur->link = newNode;
-      newNode->link = next;
+      cur->front = newNode;
+      newNode->back = cur;
+      newNode->front = next;
+      next->back = newNode;
     }
 
     cout << "New node is added!\n";
@@ -204,7 +199,7 @@ int NumberOfNodes(Node *head)
 
   while(cur != NULL)
   {
-    cur = cur->link;
+    cur = cur->front;
     amount++;
   }
 
@@ -214,29 +209,38 @@ int NumberOfNodes(Node *head)
 Node* RemoveNodeBeginning(Node *head)
 {
   Node* cur;
-  cur = head->link; // next node after head
-  delete head;
+  cur = head->front;
 
-  return cur; // return new head
+  if(head->front != NULL)
+  {
+    cur->back = NULL;
+    delete head;
+  }
+  else
+  {
+    delete head;
+  }
+
+  return cur;
 }
 
 Node* RemoveNodeEnd(Node *head)
 {
   Node *cur, *prev;
 
-  if(head->link != NULL) // if there is more nodes after head
+  if(head->front != NULL)
   {
     cur = head;
 
-    while(cur->link!=NULL)
+    while(cur->front != NULL)
     {
-      prev = cur;
-      cur = cur->link;
+      cur = cur->front;
     }
-    delete cur; // delete last
-    prev->link = NULL;
+    prev = cur->back;
+    delete cur;
+    prev->front = NULL;
   }
-  else // if head is the one node
+  else
   {
     head = RemoveNodeBeginning(head);
   }
@@ -249,10 +253,10 @@ Node* RemoveAll(Node *head)
   while(head != nullptr)
   {
     cur = head;
-    head = head->link; // next node
-    delete cur; // delete current node
+    head = head->front;
+    delete cur;
   }
-  //head = nullptr;
+
   return head;
 }
 
@@ -275,16 +279,18 @@ Node* RemoveBefore(Node *head)
     }
     else
     {
-      prev = PreviousNode(head, x);
+      prev = cur->back;
       if(prev->data == head->data)
       {
         head = cur;
+        head->back = NULL;
         delete prev;
       }
       else
       {
-        prev2 = PreviousNode(head, prev->data);
-        prev2->link = cur;
+        prev2 = prev->back;
+        prev2->front = cur;
+        cur->back = prev2;
         delete prev;
       }
       cout << "Node has been removed!\n";
@@ -306,22 +312,23 @@ Node* RemoveAfter(Node *head)
   if(cur)
   {
     cout << "Node exist!\n";
-    if(cur->link == NULL)
+    if(cur->front == NULL)
     {
       cout << "Nothing to delete!\n";
     }
     else
     {
-      next = NextNode(head, x);
-      if(next->link == NULL)
+      next = cur->front;
+      if(next->front == NULL)
       {
         head = RemoveNodeEnd(head);
       }
       else
       {
-        next2 = NextNode(head, next->data);
+        next2 = next->front;
         delete next;
-        cur->link = next2;
+        cur->front = next2;
+        next2->back = cur;
       }
       cout << "Node has been removed!\n";
     }
@@ -332,8 +339,7 @@ Node* RemoveAfter(Node *head)
 
 int main()
 {
-  Node *head = NULL; // create place in computer memory adress
-  // node is not created
+  Node *head = NULL;
   enum KEYS { num1 = 49, num2 = 50, num3 = 51 , num4 = 52, num5 = 53, num6 = 54, num7 = 55, num8 = 56, num9 = 57, num10 = 45, num11 = 61, num12 = 112, num13 = 91, num14 = 93 };
   /*
   num10 = 45; it is   -
@@ -345,50 +351,67 @@ int main()
   int choice;
 
   system("cls");
-  cout << "\n\t\tLinked List\n\n";
-  cout << "\n Author: Vladislav Ryazancev\n Ver: 5.2.7\n Date (start): 06.09.2023 / 14:33\n Date (end): 11.10.2023 / 16:13\n\n";
+  cout << "\n\t\tBidirectional List\n\n";
+  cout << "\n Author: Vladislav Ryazancev\n Ver: 3.1.4\n Date (start): 04.11.2023 / 15:35\n Date (end): xx.11.2023 / 16:13\n\n";
 
   do
     {
       system("pause>nul");
       system("cls");
 
-      cout << "\n What do you want to do: \n\n";
+      cout << "\n\t\t -- MENU --\n\n";
+      cout << "------------------- HEAD ----------------------\n";
       cout << "1. Create head\n";
-      cout << "2. Print head value and link\n";
+      cout << "2. Print head value and back/front link\n";
+      cout << "\n------------------- ADD -----------------------\n";
       cout << "3. Add node to list beginning\n";
       cout << "4. Add node to list end\n";
       cout << "5. Add node before\n";
       cout << "6. Add node after\n";
+      cout << "\n--------------- COUNT & PRINT ----------------\n";
       cout << "7. Show how many nodes exist\n";
       cout << "8. Print List\n";
+      cout << "\n------------------ REMOVE --------------------\n";
       cout << "9. Remove node at the beginning\n";
       cout << "10. Remove node at the end (-)\n";
       cout << "11. Remove node before (=)\n";
       cout << "12. Remove node after (p)\n";
       cout << "13. Remove all nodes ([)\n";
-      cout << "14. Stop Program (])\n\n";
+      cout << "\n------------------- STOP ---------------------\n";
+      cout << "14. Stop Program (])\n";
+      cout << "\n----------------------------------------------\n\n";
 
       choice = getch();
 
       switch(choice)
       {
-        case num1: head = CreateNode(); break;
+        case num1:
+        {
+          if(!head)
+          {
+            head = CreateNode();
+          }
+          else cout << "Head already exist!\n";
+          break;
+        }
         case num2:
         {
           if(head)
           {
             cout << "Head data: " << head->data << endl;
-            cout << "Head link: " << head->link << endl;
+            cout << "Head back link: " << head->back << endl;
+            cout << "Head front link: " << head->front << endl;
           }
           else cout << "Head does not exists! Create Head!\n";
           system("pause>nul");
           break;
         }
-        case num3: // add node to list beginning
-                head = AddFirst(head);
-                break;
-        case num4: // add node to list end
+        case num3:
+        {
+          head = AddFirst(head);
+          break;
+        }
+        case num4:
         {
           if(head)
           {
@@ -397,7 +420,7 @@ int main()
           else cout << "Head does not exists! Create Head!\n";
           break;
         }
-        case num5: // add node before specific node
+        case num5:
         {
           if(head)
           {
@@ -422,7 +445,6 @@ int main()
           break;
         }
         case num8: PrintList(head); break;
-        case num14: cout << "\nProgram is stopped! Goodbye!"; ProgEnd(); break;
         case num9:
         {
           if(head)
@@ -440,7 +462,7 @@ int main()
             head = RemoveNodeEnd(head);
             cout << "Last node has been removed!\n";
           }
-          else cout << "List is empty! Can not remove!\n";
+          else cout << "Bidirectional list is empty! Can not remove!\n";
           break;
         }
         case num11:
@@ -449,7 +471,7 @@ int main()
           {
             head = RemoveBefore(head);
           }
-          else cout << "List is empty! Can not remove!\n";
+          else cout << "Bidirectional list is empty! Can not remove!\n";
           break;
         }
         case num12:
@@ -458,7 +480,7 @@ int main()
           {
             head = RemoveAfter(head);
           }
-          else cout << "List is empty! Can not remove!\n";
+          else cout << "Bidirectional list is empty! Can not remove!\n";
           break;
         }
         case num13:
@@ -468,9 +490,10 @@ int main()
             head = RemoveAll(head);
             cout << "All nodes have been removed!!\n";
           }
-          else cout << "List is empty! Can not remove!\n";
+          else cout << "Bidirectional list is empty! Can not remove!\n";
           break;
         }
+        case num14: cout << "\nProgram is stopped! Goodbye!"; ProgEnd(); break;
         default: cout << "Incorrect input!\n";
       }
     } while(choice != num14);
