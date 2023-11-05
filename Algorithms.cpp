@@ -98,7 +98,6 @@ void Queue::Dequeue()
     if(front == back) // if there 1 node
     {
       delete front;
-      size--;
       front = back = NULL;
     }
     else
@@ -106,8 +105,8 @@ void Queue::Dequeue()
       Node *temp = front;
       front = front->link;
       delete temp;
-      size--;
     }
+    size--;
     cout << "Node has been removed!" << endl;
   }
 }
