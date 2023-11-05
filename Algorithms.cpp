@@ -97,11 +97,9 @@ void Queue::Dequeue()
   {
     if(front == back) // if there 1 node
     {
-      Node *temp = front;
-      front = front->link;
-      delete temp;
+      delete front;
       size--;
-      back = NULL;
+      front = back = NULL;
     }
     else
     {
