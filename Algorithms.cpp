@@ -45,6 +45,11 @@ void DeQue::Init()
   size = 0;
 }
 
+int DeQue::Size()
+{
+    return size;
+}
+
 void DeQue::AddBeginning()
 {
   Node *newNode;
@@ -123,7 +128,7 @@ void DeQue::PrintDeQue()
   }
 }
 
-void RemoveBeginning()
+void DeQue::RemoveBeginning()
 {
   if(Size() == 0) // if queue is empty
   {
@@ -134,7 +139,6 @@ void RemoveBeginning()
     if(front == back) // if there 1 node
     {
       delete front;
-      size--;
       front = back = NULL;
     }
     else
@@ -142,13 +146,13 @@ void RemoveBeginning()
       Node *temp = front;
       front = front->link;
       delete temp;
-      size--;
     }
+    size--;
     cout << "Node has been removed!" << endl;
   }
 }
 
-void RemoveEnd()
+void DeQue::RemoveEnd()
 {
   if(Size() == 0) // if queue is empty
   {
@@ -159,23 +163,22 @@ void RemoveEnd()
     if(front == back) // if there 1 node
     {
       delete front;
-      size--;
       front = back = NULL;
     }
     else
     {
-      Node *temp = back;
-      front = front->link;
-      delete temp;
-      size--;
+      Node *temp = front;
+      while(temp->link != back) // node before back node
+      {
+        temp = temp->link;
+      }
+      delete back;
+      back = temp;
+      back->link = NULL;
     }
+    size--;
     cout << "Node has been removed!" << endl;
   }
-}
-
-int DeQue::Size()
-{
-    return size;
 }
 
 void ProgEnd()
@@ -282,26 +285,26 @@ int main()
        }
        case num4:
        {
-         // if(limit == 0)
-         // {
-         //   cout << "Can NOT remove! Queue is not initialized!\n";
-         // }
-         // else
-         // {
-         //   q.RemoveAll();
-         // }
+         if(limit == 0)
+          {
+            cout << "Can NOT remove! DeQue is not initialized!\n";
+          }
+          else
+          {
+            Dq.RemoveBeginning();
+          }
          break;
        }
        case num5:
        {
-         // if(limit == 0)
-         // {
-         //   cout << "Can NOT print! Queue is not initialized!\n";
-         // }
-         // else
-         // {
-         //   q.PrintQueue();
-         // }
+         if(limit == 0)
+          {
+            cout << "Can NOT remove! DeQue is not initialized!\n";
+          }
+          else
+          {
+            Dq.RemoveEnd();
+          }
          break;
        }
        case num6:
