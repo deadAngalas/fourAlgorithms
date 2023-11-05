@@ -149,7 +149,7 @@ int main()
 
   system("cls");
   cout << "\n\t\tStack\n\n";
-  cout << "\n Author: Vladislav Ryazancev\n Ver: 2.1.1\n Date (start): 05.11.2023 / 11:17\n Date (end): xx.11.2023 / 16:13\n\n";
+  cout << "\n Author: Vladislav Ryazancev\n Ver: 2.1.1\n Date (start): 05.11.2023 / 11:17\n Date (end): 05.11.2023 / 13:20\n\n";
 
   do
     {
