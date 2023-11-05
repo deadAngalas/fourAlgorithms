@@ -116,6 +116,7 @@ void Queue::Dequeue()
 
 void Queue::PrintQueue()
 {
+  // queue feature - first in, first out (FIFO)
   if(front == nullptr) // if queue is empty
   {
     cout << "Queue is empty!\n";
@@ -169,7 +170,7 @@ int main()
 
   system("cls");
   cout << "\n\t\tQueue\n\n";
-  cout << "\n Author: Vladislav Ryazancev\n Ver: 2.1.1\n Date (start): 05.11.2023 / 13:31\n Date (end): 05.11.2023 / 16:13\n\n";
+  cout << "\n Author: Vladislav Ryazancev\n Ver: 2.1.1\n Date (start): 05.11.2023 / 13:31\n Date (end): 05.11.2023 / 15:46\n\n";
 
   do
     {
