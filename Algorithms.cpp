@@ -1,7 +1,6 @@
 #include<iostream>
 #include<cstdlib>
 #include<conio.h>
-#define N 100
 
 using namespace std;
 
@@ -54,16 +53,29 @@ void Stack::Push()
 // remove node at the beginning
 void Stack::Pop()
 {
+  if(top == NULL) // if stack is empty
+  {
+    cout << "Stack is empty! Nothing to remove!\n";
+  }
+  else
+  {
     Node *temp = top;
     top = top->link;
     delete temp;
     size--;
     cout << "Node has been removed!" << endl;
+  }
 }
 
 // stack output
 void Stack::PrintStack()
 {
+  if(top == NULL) // if stack is empty
+  {
+    cout << "Stack is empty! Nothing to remove!\n";
+  }
+  else
+  {
     Node *cur = top; // start print from top node -> stack feature - last in, first out
     cout << "Stack elements:\n\n";
     while (cur != nullptr) // while cur exists
@@ -71,6 +83,7 @@ void Stack::PrintStack()
         cout << "  " << cur->data << "\n";
         cur = cur->link; // node which is under
     }
+  }
 }
 
 // node count
@@ -82,6 +95,12 @@ int Stack::Size()
 // all nodes removing
 void Stack::RemoveAll()
 {
+  if(top == NULL) // if stack is empty
+  {
+    cout << "Stack is empty! Nothing to remove!\n";
+  }
+  else
+  {
     Node *temp;
     while (top != nullptr) // while top exists
     {
@@ -91,6 +110,7 @@ void Stack::RemoveAll()
     }
     size = 0;
     cout << "All nodes have been removed!\n";
+  }
 }
 
 void ProgEnd()
@@ -187,10 +207,6 @@ int main()
           {
             cout << "Can NOT remove! Stack is not initialized!\n";
           }
-          else if(s.Size() == 0)
-          {
-            cout << "Stack is empty! Nothing to remove!\n";
-          }
           else
           {
             s.Pop();
@@ -203,10 +219,6 @@ int main()
           {
             cout << "Can NOT remove! Stack is not initialized!\n";
           }
-          else if(s.Size() == 0)
-          {
-            cout << "Stack is empty! Nothing to remove!\n";
-          }
           else
           {
             s.RemoveAll();
@@ -218,10 +230,6 @@ int main()
           if(limit == 0)
           {
             cout << "Can NOT print! Stack is not initialized!\n";
-          }
-          else if(s.Size() == 0)
-          {
-            cout << "Stack is empty!\n";
           }
           else
           {
