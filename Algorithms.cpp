@@ -352,7 +352,7 @@ int main()
 
   system("cls");
   cout << "\n\t\tBidirectional List\n\n";
-  cout << "\n Author: Vladislav Ryazancev\n Ver: 3.1.4\n Date (start): 04.11.2023 / 15:35\n Date (end): xx.11.2023 / 16:13\n\n";
+  cout << "\n Author: Vladislav Ryazancev\n Ver: 3.1.4\n Date (start): 04.11.2023 / 15:35\n Date (end): 04.11.2023 / 17:55\n\n";
 
   do
     {
