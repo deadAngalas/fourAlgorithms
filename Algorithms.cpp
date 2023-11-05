@@ -216,8 +216,8 @@ int main()
   int limit = 0;
 
   system("cls");
-  cout << "\n\t\tLinked List\n\n";
-  cout << "\n Author: Vladislav Ryazancev\n Ver: 1.2.7\n Date (start): 05.09.2023 / 16:03\n Date (end): 05.10.2023 / 17:01\n\n";
+  cout << "\n\t\tDeQue\n\n";
+  cout << "\n Author: Vladislav Ryazancev\n Ver: 1.2.7\n Date (start): 05.09.2023 / 16:03\n Date (end): 05.10.2023 / 17:28\n\n";
 
   do
     {
